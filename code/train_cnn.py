@@ -4,7 +4,7 @@
 # Test accuracy: 2.44%
 import numpy as np
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Conv2D, Flatten
+from tensorflow.keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D
 
 np.random.seed(123)
 X = np.load('generated_games/features-40k.npy')
@@ -23,20 +23,24 @@ Y_train, Y_test = Y[:train_samples], Y[train_samples:]
 model = Sequential()
 model.add(Conv2D(filters=48, 
                 kernel_size=(3, 3), 
-                activation='sigmoid', 
+                activation='relu', 
                 padding='same',
                 input_shape=input_shape))
-model.add(Conv2D(48, (3, 3), padding='same', activation='sigmoid'))  
+model.add(Dropout(rate=0.5))
+model.add(Conv2D(48, (3, 3), padding='same', activation='relu'))  
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(rate=0.5))
 model.add(Flatten())  
-model.add(Dense(512, activation='sigmoid'))
-model.add(Dense(size * size, activation='sigmoid')) 
+model.add(Dense(512, activation='relu'))
+model.add(Dropout(rate=0.5))
+model.add(Dense(size * size, activation='softmax')) 
 model.summary()
 
-model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy'])
+model.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['accuracy'])
 
 model.fit(X_train, Y_train,
           batch_size=64,
-          epochs=5,
+          epochs=100,
           verbose=1,
           validation_data=(X_test, Y_test))
 
