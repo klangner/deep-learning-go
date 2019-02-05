@@ -19,7 +19,7 @@ class DeepLearningAgent(Agent):
         return self.model.predict(input_tensor)[0]
 
     def select_move(self, game_state):
-        num_moves = self.encoder.board_with * self.encoder.board_height
+        num_moves = self.encoder.board_width * self.encoder.board_height
         move_probs = self.predict(game_state)
         # alter the probability distribution
         move_probs = move_probs ** 3

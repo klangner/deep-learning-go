@@ -1,6 +1,10 @@
 /data/
 .vscode
 *.h5
+*.hdf5
+*.gz
+*.tar
+code/data/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
