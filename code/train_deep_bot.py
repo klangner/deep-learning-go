@@ -24,7 +24,7 @@ for layer in network_layers:
 model.add(Dense(nb_classes, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
 
-model.fit(X, y, batch_size=128, epochs=1, verbose=1)
+model.fit(X, y, batch_size=128, epochs=2, verbose=1)
 
 deep_learning_bot = DeepLearningAgent(model, encoder)
 model_file = h5py.File("agents/deep_bot.h5", "w")
