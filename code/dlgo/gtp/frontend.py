@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-# tag::gtp_frontend_imports[]
 import sys
 
 from dlgo.gtp import command, response
