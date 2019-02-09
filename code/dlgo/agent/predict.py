@@ -49,7 +49,6 @@ class DeepLearningAgent(Agent):
 
 def load_prediction_agent(h5file):
     model = kerasutil.load_model_from_hdf5_group(h5file['model'])
-    print("{:}".format(model))
     encoder_name = h5file['encoder'].attrs['name']
     if not isinstance(encoder_name, str):
         encoder_name = encoder_name.decode('ascii')
