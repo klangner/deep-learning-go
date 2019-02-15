@@ -9,42 +9,51 @@ from dlgo import kerasutil
 
 class PolicyAgent(Agent):
     def __init__(self, model, encoder):
-        self.model = model
-        self.encoder = encoder
+        self._model = model
+        self._encoder = encoder
 
-    def predict(self, game_state):
-        encoded_state = self.encoder.encode(game_state)
-        input_tensor = np.array([encoded_state])
-        return self.model.predict(input_tensor)[0]
+    def set_collector(self, collector):
+        self._collector = collector
 
     def select_move(self, game_state):
-        num_moves = self.encoder.board_width * self.encoder.board_height
-        move_probs = self.predict(game_state)
-        # alter the probability distribution
-        move_probs = move_probs ** 3
-        eps = 1e-6
-        move_probs = np.clip(move_probs, eps, 1-eps)
+        num_moves = self._encoder.board_width * self._encoder.board_height
+
+        board_tensor = self._encoder.encode(game_state)
+        x = np.array([board_tensor])
+        move_probs = self._model.predict(x)[0]
+
+        # Prevent move probs from getting stuck at 0 or 1.
+        eps = 1e-5
+        move_probs = np.clip(move_probs, eps, 1 - eps)
+        # Re-normalize to get another probability distribution.
         move_probs = move_probs / np.sum(move_probs)
-        
+
+        # Turn the probabilities into a ranked list of moves.
         candidates = np.arange(num_moves)
-        ranked_moves = np.random.choice(candidates, num_moves, replace=False, p=move_probs)
-        
+        ranked_moves = np.random.choice(
+            candidates, num_moves, replace=False, p=move_probs)
         for point_idx in ranked_moves:
-            point = self.encoder.decode_point_index(point_idx)
-            play = goboard.Move.play(point)
-            is_valid = game_state.is_valid_move(play)
-            is_an_eye = is_point_an_eye(game_state.board, point, game_state.next_player)
-            if is_valid and (not is_an_eye):
+            point = self._encoder.decode_point_index(point_idx)
+            if game_state.is_valid_move(goboard.Move.play(point)) and \
+                    not is_point_an_eye(game_state.board,
+                                        point,
+                                        game_state.next_player):
+                if self._collector is not None:
+                    self._collector.record_decision(
+                        state=board_tensor,
+                        action=point_idx
+                    )
                 return goboard.Move.play(point)
+        # No legal, non-self-destructive moves less.
         return goboard.Move.pass_turn()
 
     def serialize(self, h5file):
         h5file.create_group('encoder')
-        h5file['encoder'].attrs['name'] = self.encoder.name()
-        h5file['encoder'].attrs['board_width'] = self.encoder.board_width
-        h5file['encoder'].attrs['board_height'] = self.encoder.board_height
+        h5file['encoder'].attrs['name'] = self._encoder.name()
+        h5file['encoder'].attrs['board_width'] = self._encoder.board_width
+        h5file['encoder'].attrs['board_height'] = self._encoder.board_height
         h5file.create_group('model')
-        kerasutil.save_model_to_hdf5_group(self.model, h5file['model'])
+        kerasutil.save_model_to_hdf5_group(self._model, h5file['model'])
 
 
 def load_policy_agent(h5file):
