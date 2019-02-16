@@ -79,8 +79,8 @@ def main():
 
     agent1 = agent.load_policy_agent(h5py.File(args.learning_agent))
     agent2 = agent.load_policy_agent(h5py.File(args.learning_agent))
-    # agent1.set_temperature(args.temperature)
-    # agent2.set_temperature(args.temperature)
+    agent1.set_temperature(args.temperature)
+    agent2.set_temperature(args.temperature)
 
     collector1 = rl.ExperienceCollector()
     collector2 = rl.ExperienceCollector()
