@@ -13,9 +13,9 @@ class BoardTest(unittest.TestCase):
 
     def test_on_grid(self):
         board = Board(9)
-        self.assertTrue(board.is_on_grid(Point(0, 8)))
-        self.assertFalse(board.is_on_grid(Point(2, -1)))
-        self.assertFalse(board.is_on_grid(Point(12, 1)))
+        self.assertTrue(board.is_on_grid(Point(1, 9)))
+        self.assertFalse(board.is_on_grid(Point(2, 0)))
+        self.assertFalse(board.is_on_grid(Point(12, 3)))
 
 
 if __name__ == '__main__':

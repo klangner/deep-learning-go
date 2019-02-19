@@ -1,10 +1,12 @@
+import copy
 
 from .types import Point, Player
 
 
 class Board:
     def __init__(self, size: int = 19):
-        self._board_size = size
+        self.num_rows = size
+        self.num_cols = size
         self._grid = {}
 
     def place_stone(self, player: Player, point: Point):
@@ -13,7 +15,7 @@ class Board:
         self._grid[point] = player
 
     def is_on_grid(self, point: Point) -> bool:
-        return 0 <= point.row < self._board_size and 0 <= point.col < self._board_size
+        return 1 <= point.row <= self.num_rows and 1 <= point.col <= self.num_cols
 
     def get(self, point: Point) -> Player:
         """Return the content of a point on the board.
@@ -24,5 +26,11 @@ class Board:
 
     def __eq__(self, other):
         return isinstance(other, Board) and \
-            self._board_size == other._board_size and \
+            self.num_rows == other.num_rows and \
+            self.num_cols == other.num_cols and \
             self._grid == other._grid
+
+    def __deepcopy__(self, memodict={}):
+        copied = Board(self.num_rows)
+        copied._grid = copy.copy(self._grid)
+        return copied
