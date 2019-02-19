@@ -1,12 +1,15 @@
 import numpy as np
 # tag::print_utils[]
 from dlgo import gotypes
+from dlgo import gomoku
 
 COLS = 'ABCDEFGHJKLMNOPQRST'
 STONE_TO_CHAR = {
     None: ' . ',
     gotypes.Player.black: ' x ',
     gotypes.Player.white: ' o ',
+    gomoku.Player.black: ' x ',
+    gomoku.Player.white: ' o ',
 }
 
 
