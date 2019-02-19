@@ -1,7 +1,5 @@
 import unittest
 
-from dlgo.utils import print_board
-
 from .gamestate import GameState
 from .board import Board
 from .types import Point, Player, Move
@@ -12,7 +10,7 @@ class GameStateTest(unittest.TestCase):
     def test_new_game(self):
         state = GameState.new_game(19)
         next_state = state.apply_move(Move(Point(2, 2)))
-        board = next_state._board
+        board = next_state.board
         self.assertEqual(Player.black, board.get(Point(2, 2)))
 
     def test_validate_move(self):
