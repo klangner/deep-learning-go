@@ -2,7 +2,7 @@ import time
 import argparse
 import multiprocessing
 
-from gomoku.agent import RandomBot
+from gomoku import agent
 from gomoku.ruleset import Player, GameState
 from gomoku.utils import print_board, print_move
 
@@ -50,17 +50,28 @@ def play_parallel(num_games: int, board_size: int, bots: dict):
     return winners
 
 
+def create_agent(agent_name: str) -> agent.Agent:
+    if agent_name == 'random':
+        return agent.RandomAgent()
+    elif agent_name == 'minmax':
+        return agent.MinMaxAgent()
+    else:
+        return agent.RandomAgent()
+
+
 def main():
     # Parse command line arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('--num-games', '-n', type=int, default=100)
-    parser.add_argument('--board-size', '-b', type=int, default=19)
+    parser.add_argument('--board-size', '-s', type=int, default=19)
+    parser.add_argument('--black', '-b', type=str, default='random')
+    parser.add_argument('--white', '-w', type=str, default='random')
     args = parser.parse_args()
 
     # Prepare bots
     bots = {
-        Player.black: RandomBot(),
-        Player.white: RandomBot(),
+        Player.black: create_agent(args.black),
+        Player.white: create_agent(args.white),
     } 
 
     # Run games
