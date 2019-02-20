@@ -12,8 +12,8 @@ def play_slow(board_size: int, bots) -> Player:
     while not game.is_over():
         time.sleep(0.2)  
 
-        print(chr(27) + "[2J") 
         bot_move = bots[game.next_player].select_move(game)
+        print(chr(27) + "[2J") 
         print_move(game.next_player, bot_move)
         game = game.apply_move(bot_move)
         print_board(game.board)
@@ -53,8 +53,12 @@ def play_parallel(num_games: int, board_size: int, bots: dict):
 def create_agent(agent_name: str) -> agent.Agent:
     if agent_name == 'random':
         return agent.RandomAgent()
-    elif agent_name == 'minmax':
-        return agent.MinMaxAgent()
+    elif agent_name.startswith('minmax'):
+        tokens = agent_name.split('_')
+        if len(tokens) > 1:
+            return agent.MinMaxAgent(depth=int(tokens[1]))
+        else:
+            return agent.MinMaxAgent()
     else:
         return agent.RandomAgent()
 
@@ -66,6 +70,7 @@ def main():
     parser.add_argument('--board-size', '-s', type=int, default=19)
     parser.add_argument('--black', '-b', type=str, default='random')
     parser.add_argument('--white', '-w', type=str, default='random')
+    parser.add_argument('-i', action='store_true')
     args = parser.parse_args()
 
     # Prepare bots
@@ -74,17 +79,20 @@ def main():
         Player.white: create_agent(args.white),
     } 
 
-    # Run games
-    start_time = time.time()
-    winners = play_parallel(args.num_games, args.board_size, bots)
-    total_time = time.time() - start_time
+    if args.i:
+        play_slow(args.board_size, bots)
+    else:
+        # Run games
+        start_time = time.time()
+        winners = play_parallel(args.num_games, args.board_size, bots)
+        total_time = time.time() - start_time
 
-    # Print result
-    games_per_second = args.num_games / total_time
-    print("Running {} games in {:.2f}s {:.2f} games/sec".format(args.num_games, total_time, games_per_second))
-    black_wins = len([x for x in winners if x == Player.black])
-    white_wins = len([x for x in winners if x == Player.white])
-    print("Black wins: {}, White wins: {}".format(black_wins, white_wins))
+        # Print result
+        games_per_second = args.num_games / total_time
+        print("Running {} games in {:.2f}s {:.2f} games/sec".format(args.num_games, total_time, games_per_second))
+        black_wins = len([x for x in winners if x == Player.black])
+        white_wins = len([x for x in winners if x == Player.white])
+        print("Black wins: {}, White wins: {}".format(black_wins, white_wins))
 
 
 if __name__ == '__main__':
