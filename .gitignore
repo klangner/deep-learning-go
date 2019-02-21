@@ -4,6 +4,7 @@
 *.hdf5
 *.gz
 *.tar
+*.pickle
 code/data/
 /bin
 # Byte-compiled / optimized / DLL files

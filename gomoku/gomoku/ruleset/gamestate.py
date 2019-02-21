@@ -1,4 +1,5 @@
 import copy
+import pickle
 
 from .board import Board
 from .types import Player, Move, Point
@@ -9,7 +10,7 @@ class GameState:
     def __init__(self, board: Board, next_player: Player, move: Move):
         self.board = board
         self.next_player = next_player
-        self._last_move = move
+        self.last_move = move
 
     def apply_move(self, move: Move) -> 'GameState':
         """Return the new GameState after applying the move."""
@@ -35,14 +36,14 @@ class GameState:
         return moves
 
     def is_over(self) -> bool:
-        if self._is_winning_move(self._last_move):
+        if self._is_winning_move(self.last_move):
             return True
         if len(self.legal_moves()) == 0:
             return True
         return False
 
     def winner(self) -> Player:
-        if self._is_winning_move(self._last_move):
+        if self._is_winning_move(self.last_move):
             return self.next_player.other
         return None
 
@@ -118,3 +119,8 @@ class GameState:
             row -= 1
             col += 1
         return counter == 5
+
+    def serialize(self, file_name: str):
+        file = open(file_name, mode='wb')
+        pickle.dump(self, file)
+        file.close()
