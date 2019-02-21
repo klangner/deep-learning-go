@@ -5,8 +5,6 @@ from gomoku.ruleset import GameState
 from gomoku.utils import print_game_state
 
 
-
-
 def main():
     # Parse command line arguments
     parser = argparse.ArgumentParser()

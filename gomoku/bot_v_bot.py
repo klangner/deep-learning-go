@@ -64,6 +64,8 @@ def create_agent(agent_name: str) -> agent.Agent:
             return agent.MinMaxAgent(depth=int(tokens[1]))
         else:
             return agent.MinMaxAgent()
+    elif agent_name == 'mcts':
+        return agent.MCTSAgent(1000)
     else:
         return agent.RandomAgent()
 
