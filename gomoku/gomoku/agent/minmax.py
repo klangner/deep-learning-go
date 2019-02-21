@@ -12,7 +12,8 @@ class MinMaxAgent(Agent):
 
     def select_move(self, game_state: GameState) -> Move:
         """Choose a random valid move."""
-        move, _ = self.move_value(game_state, self._depth)
+        move, value = self.move_value(game_state, self._depth)
+        print('{:} {:}'.format(move, value))
         return move
 
     def move_value(self, game_state: GameState, depth: int) -> (Move, int):
@@ -23,8 +24,8 @@ class MinMaxAgent(Agent):
             next_state = game_state.apply_move(move)
             if next_state.is_over():
                 return (move, 1)
-        best_move, best_value = random.choice(candidates), -1
         if depth > 1:
+            best_move, best_value = random.choice(candidates), -1
             for move in candidates:
                 next_state = game_state.apply_move(move)
                 _, value = self.move_value(next_state, depth-1)
@@ -32,5 +33,6 @@ class MinMaxAgent(Agent):
                 if value > best_value:
                     best_move = move
                     best_value = value
-        return (best_move, best_value)
+            return (best_move, best_value)
+        return random.choice(candidates), 0
 
