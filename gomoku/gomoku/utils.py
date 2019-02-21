@@ -1,5 +1,5 @@
 import numpy as np
-from gomoku.ruleset import Player, Move, Point, Board
+from gomoku.ruleset import Player, Move, Point, Board, GameState
 
 
 COLS = 'ABCDEFGHJKLMNOPQRST'
@@ -29,6 +29,11 @@ def print_board(board: Board):
             line.append(STONE_TO_CHAR[stone])
         print('%s%d %s' % (bump, row, ''.join(line)))
     print('    ' + '  '.join(COLS[:board.num_cols]))
+
+
+def print_game_state(game_state: GameState):
+    print_move(game_state.next_player.other, game_state.last_move)
+    print_board(game_state.board)
 
 
 def point_from_coords(coords):

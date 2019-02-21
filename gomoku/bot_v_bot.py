@@ -7,8 +7,9 @@ from gomoku.ruleset import Player, GameState
 from gomoku.utils import print_board, print_move
 
 
-def play_slow(board_size: int, bots) -> Player:
+def play_slow(board_size: int, bots, serialize=False) -> Player:
     game = GameState.new_game(board_size)
+    step = 1
     while not game.is_over():
         time.sleep(0.2)  
 
@@ -17,6 +18,10 @@ def play_slow(board_size: int, bots) -> Player:
         print_move(game.next_player, bot_move)
         game = game.apply_move(bot_move)
         print_board(game.board)
+        if serialize:
+            file_name = 'pickle/game-state-{:02d}.pickle'.format(step)
+            game.serialize(file_name)
+        step += 1
 
     winner = game.winner()
     if winner is None:
@@ -71,6 +76,7 @@ def main():
     parser.add_argument('--black', '-b', type=str, default='random')
     parser.add_argument('--white', '-w', type=str, default='random')
     parser.add_argument('-i', action='store_true')
+    parser.add_argument('--serialize', action='store_true')
     args = parser.parse_args()
 
     # Prepare bots
@@ -80,7 +86,7 @@ def main():
     } 
 
     if args.i:
-        play_slow(args.board_size, bots)
+        play_slow(args.board_size, bots, serialize=args.serialize)
     else:
         # Run games
         start_time = time.time()
