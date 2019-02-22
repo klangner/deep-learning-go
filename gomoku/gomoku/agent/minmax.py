@@ -13,7 +13,6 @@ class MinMaxAgent(Agent):
     def select_move(self, game_state: GameState) -> Move:
         """Choose a random valid move."""
         move, value = self.move_value(game_state, self._depth)
-        print('{:} {:}'.format(move, value))
         return move
 
     def move_value(self, game_state: GameState, depth: int) -> (Move, int):
