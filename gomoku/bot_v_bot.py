@@ -31,7 +31,7 @@ def play_slow(board_size: int, bots, serialize=False) -> Player:
     return winner
 
 
-def play_fast(board_size: int, bots) -> Player:
+def play_fast(board_size: int, bots: dict) -> Player:
     """This can play 4.7 games/sec on 19x19 on MacBook Air"""
     game = GameState.new_game(board_size)
     while not game.is_over():
