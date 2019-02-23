@@ -5,6 +5,7 @@ from .board import Board
 from .types import Player, Move, Point
 
 
+
 class GameState:
 
     def __init__(self, board: Board, next_player: Player, move: Move):
@@ -27,6 +28,9 @@ class GameState:
         return self.board.get(move.point) is None and not self.is_over()
 
     def legal_moves(self) -> [Move]:
+        return [Move.play(p) for p in self.board.empty_points()]
+
+    def legal_moves2(self) -> [Move]:
         moves = []
         for row in range(self.board.num_rows):
             for col in range(self.board.num_cols):
