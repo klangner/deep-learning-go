@@ -65,7 +65,7 @@ def create_agent(agent_name: str) -> agent.Agent:
         else:
             return agent.MinMaxAgent()
     elif agent_name == 'mcts':
-        return agent.MCTSAgent(10000)
+        return agent.MCTSAgent(1000)
     else:
         return agent.RandomAgent()
 

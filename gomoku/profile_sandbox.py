@@ -14,8 +14,8 @@ def measure_move_time(agent):
     print('Finished in {:.2f}sec.'.format(total_time))
 
 def main():
-    # measure_move_time(MinMaxAgent(depth=3))
-    measure_move_time(MCTSAgent(10000))
+    measure_move_time(MinMaxAgent(depth=3))
+    # measure_move_time(MCTSAgent(10000))
 
 if __name__ == '__main__':
     main()
