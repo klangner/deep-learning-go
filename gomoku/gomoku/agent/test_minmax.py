@@ -46,7 +46,6 @@ class MinMaxTest(unittest.TestCase):
         state = state.apply_move(Move(Point(3, 6)))
         state = state.apply_move(Move(Point(7, 4)))
         state = state.apply_move(Move(Point(4, 5)))
-        print_board(state.board)
         move = agent.select_move(state)
         self.assertEqual(Point(5, 4), move.point)
 
