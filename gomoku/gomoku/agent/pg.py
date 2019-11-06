@@ -6,7 +6,7 @@ from tensorflow.keras.optimizers import SGD
 from .base import Agent
 from gomoku import encoders
 from gomoku.ruleset import GameState
-from dlgo import kerasutil
+from gomoku.networks import kerasutil
 
 
 class PolicyAgent(Agent):
